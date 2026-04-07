@@ -1,0 +1,10 @@
+{
+  "latestErrorEvent": {
+    "code": "TYPE-001",
+    "message": "Failed to generate type declaration. Execute the below cmd to reproduce and fix the error. #TYPE-001\nargs: {\"cmd\":\"npx tsc --project /Users/igrbesa/Documents/react/react-microfrend/cart/node_modules/.federation/tsconfig.a3ea14363d02e4e57fc50aa1dde41886.json\"}\nView the docs to see how to solve: https://module-federation.io/guide/troubleshooting/type#type-001",
+    "args": {
+      "cmd": "npx tsc --project /Users/igrbesa/Documents/react/react-microfrend/cart/node_modules/.federation/tsconfig.a3ea14363d02e4e57fc50aa1dde41886.json"
+    },
+    "timestamp": 1775598332974
+  }
+}

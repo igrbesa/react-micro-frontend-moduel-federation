@@ -1,0 +1,58 @@
+.mfe-products {
+  max-width: 640px;
+}
+
+.mfe-products__lead {
+  margin: 0 0 16px;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.mfe-products__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.mfe-products__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid #d4dbe5;
+  border-radius: 10px;
+}
+
+.mfe-products__name {
+  font-weight: 600;
+}
+
+.mfe-products__price {
+  color: #4f46e5;
+  font-variant-numeric: tabular-nums;
+}
+
+.mfe-products__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mfe-products__add-btn {
+  border: 1px solid #4f46e5;
+  background: #eef2ff;
+  color: #3730a3;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+.mfe-products__add-btn:hover {
+  background: #e0e7ff;
+}

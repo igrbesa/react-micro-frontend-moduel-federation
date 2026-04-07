@@ -1,0 +1,16 @@
+{
+  "name": "react-microfrend",
+  "private": true,
+  "workspaces": [
+    "shell",
+    "products",
+    "cart"
+  ],
+  "scripts": {
+    "dev": "concurrently -n products,cart,shell -c auto \"npm run dev -w products\" \"npm run dev -w cart\" \"npm run dev -w shell\"",
+    "build": "npm run build -w products && npm run build -w cart && npm run build -w shell"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
