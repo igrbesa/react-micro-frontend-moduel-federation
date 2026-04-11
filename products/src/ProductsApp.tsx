@@ -59,12 +59,12 @@ function ProductDetails() {
   const product = items.find((item) => item.id === productId)
 
   if (!product) {
-    return <Navigate to="/products" replace />
+    return <Navigate to=".." relative="path" replace />
   }
 
   return (
     <div className="mfe-products mfe-products--detail">
-      <Link to="/products" className="mfe-products__back-link">
+      <Link to=".." relative="path" className="mfe-products__back-link">
         Back to products
       </Link>
       <h2>{product.name}</h2>
