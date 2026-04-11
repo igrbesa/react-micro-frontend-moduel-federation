@@ -13,6 +13,11 @@
           let pkg = await import("__mf__virtual/shell__prebuild__react_mf_2_dom__prebuild__.js");
             return pkg;
         }
+      ,
+        "react-router-dom": async () => {
+          let pkg = await import("__mf__virtual/shell__prebuild__react_mf_2_router_mf_2_dom__prebuild__.js");
+            return pkg;
+        }
       
     }
       const usedShared = {
@@ -77,6 +82,38 @@
             shareConfig: {
               singleton: true,
               requiredVersion: "^19.2.4",
+              
+            }
+          }
+        ,
+          "react-router-dom": {
+            name: "react-router-dom",
+            version: "7.13.2",
+            scope: ["default"],
+            loaded: false,
+            from: "shell",
+            async get () {
+              if (false) {
+                throw new Error(`[Module Federation] Shared module '${"react-router-dom"}' must be provided by host`);
+              }
+              usedShared["react-router-dom"].loaded = true
+              const {"react-router-dom": pkgDynamicImport} = importMap
+              const res = await pkgDynamicImport()
+              const exportModule = false && "react-router-dom" === "react"
+                ? (res?.default ?? res)
+                : {...res}
+              // All npm packages pre-built by vite will be converted to esm
+              Object.defineProperty(exportModule, "__esModule", {
+                value: true,
+                enumerable: false
+              })
+              return function () {
+                return exportModule
+              }
+            },
+            shareConfig: {
+              singleton: true,
+              requiredVersion: "^7.13.2",
               
             }
           }
