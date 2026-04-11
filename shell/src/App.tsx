@@ -16,7 +16,7 @@ function App() {
       <Route element={<ShellLayout />}>
         <Route index element={<HomePage />} />
         <Route
-          path="products"
+          path="products/*"
           element={
             <Suspense fallback={<RemoteFallback />}>
               <ProductsRemote />

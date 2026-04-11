@@ -1,13 +1,26 @@
 import { Provider } from 'react-redux'
+import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { bus } from '../../shared/bus'
 import { CART_ADD_EVENT } from '../../shared/cartEvents'
 import { addItemToStoredCart } from '../../shared/cartStorage'
 import { useAppSelector } from './hooks'
 import { selectProducts } from './store/slices/productsSlice'
+import type { Product } from './store/slices/productsSlice'
 import { store } from './store'
 import './products.css'
 
-function ProductsContent() {
+function addProductToCart(product: Product) {
+  const payload = {
+    id: product.id,
+    name: product.name,
+    price: product.price,
+  }
+
+  addItemToStoredCart(payload)
+  bus.emit(CART_ADD_EVENT, payload)
+}
+
+function ProductsList() {
   const items = useAppSelector(selectProducts)
 
   return (
@@ -22,18 +35,13 @@ function ProductsContent() {
             <span className="mfe-products__name">{p.name}</span>
             <div className="mfe-products__actions">
               <span className="mfe-products__price">${p.price.toFixed(2)}</span>
+              <Link to={p.id} className="mfe-products__detail-btn">
+                View detail
+              </Link>
               <button
                 type="button"
                 className="mfe-products__add-btn"
-                onClick={() => {
-                  const payload = {
-                    id: p.id,
-                    name: p.name,
-                    price: p.price,
-                  }
-                  addItemToStoredCart(payload)
-                  bus.emit(CART_ADD_EVENT, payload)
-                }}
+                onClick={() => addProductToCart(p)}
               >
                 ADD
               </button>
@@ -42,6 +50,54 @@ function ProductsContent() {
         ))}
       </ul>
     </div>
+  )
+}
+
+function ProductDetails() {
+  const items = useAppSelector(selectProducts)
+  const { productId } = useParams<{ productId: string }>()
+  const product = items.find((item) => item.id === productId)
+
+  if (!product) {
+    return <Navigate to="/products" replace />
+  }
+
+  return (
+    <div className="mfe-products mfe-products--detail">
+      <Link to="/products" className="mfe-products__back-link">
+        Back to products
+      </Link>
+      <h2>{product.name}</h2>
+      <p className="mfe-products__description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus,
+        risus a pulvinar cursus, nibh nunc cursus turpis, eu tincidunt magna
+        nisl vel elit.
+      </p>
+      <img
+        className="mfe-products__image"
+        src={`https://picsum.photos/seed/${product.id}/600/360`}
+        alt={product.name}
+      />
+      <div className="mfe-products__detail-footer">
+        <span className="mfe-products__price">${product.price.toFixed(2)}</span>
+        <button
+          type="button"
+          className="mfe-products__add-btn"
+          onClick={() => addProductToCart(product)}
+        >
+          ADD TO CART
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function ProductsContent() {
+  return (
+    <Routes>
+      <Route index element={<ProductsList />} />
+      <Route path=":productId" element={<ProductDetails />} />
+    </Routes>
   )
 }
 
