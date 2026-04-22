@@ -36,6 +36,60 @@ body {
   gap: 16px;
 }
 
+.top-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.top-bar__auth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-bar__user {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top-bar__sign-in {
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #ffffff;
+  background: #4f46e5;
+  border: 1px solid #4f46e5;
+}
+
+.top-bar__sign-in:hover {
+  background: #4338ca;
+  border-color: #4338ca;
+}
+
+.top-bar__sign-out {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #334155;
+  background: #f1f5f9;
+  border: 1px solid #d4dbe5;
+}
+
+.top-bar__sign-out:hover {
+  background: #e2e8f0;
+}
+
 .top-bar__brand {
   text-decoration: none;
   color: #1e293b;
@@ -147,4 +201,91 @@ body {
 .remote-fallback {
   margin: 0;
   color: #64748b;
+}
+
+.login {
+  max-width: 400px;
+}
+
+.login__title {
+  margin-top: 0;
+}
+
+.login__lead {
+  margin: 0 0 20px;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #d4dbe5;
+  border-radius: 12px;
+}
+
+.login__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.login__input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d4dbe5;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.login__input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.login__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.login__submit {
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #fff;
+  background: #4f46e5;
+  border: 1px solid #4f46e5;
+  font-family: inherit;
+}
+
+.login__submit:hover {
+  background: #4338ca;
+  border-color: #4338ca;
+}
+
+.login__cancel {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+.login__cancel:hover {
+  color: #4f46e5;
 }
