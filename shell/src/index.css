@@ -203,6 +203,25 @@ body {
   color: #64748b;
 }
 
+.shell-cart-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.shell-cart-split__pane {
+  min-width: 0;
+}
+
+@media (max-width: 800px) {
+  .shell-cart-split {
+    grid-template-columns: 1fr;
+  }
+}
+
 .login {
   max-width: 400px;
 }

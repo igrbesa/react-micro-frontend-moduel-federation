@@ -2,11 +2,11 @@ import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAuth } from './auth/RequireAuth'
 import { ShellLayout } from './layout/ShellLayout'
+import { CartPage } from './pages/CartPage'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
 
 const ProductsRemote = lazy(async () => import('products/ProductsApp'))
-const CartRemote = lazy(async () => import('cart/CartApp'))
 
 function RemoteFallback() {
   return <p className="remote-fallback">Loading remote…</p>
@@ -32,9 +32,7 @@ function App() {
           path="cart"
           element={
             <RequireAuth>
-              <Suspense fallback={<RemoteFallback />}>
-                <CartRemote />
-              </Suspense>
+              <CartPage />
             </RequireAuth>
           }
         />
