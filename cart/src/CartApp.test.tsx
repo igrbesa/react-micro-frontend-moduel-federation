@@ -61,7 +61,11 @@ describe('CartApp', () => {
 
     await user.click(screen.getByRole('button', { name: /Pen set/i }))
 
-    expect(emitSpy).toHaveBeenCalledWith(CART_PRODUCT_PREVIEW_EVENT, { productId: '2' })
+    expect(emitSpy).toHaveBeenCalledWith(CART_PRODUCT_PREVIEW_EVENT, {
+      openPreviewPane: true,
+      previewRemote: 'products',
+      previewContext: { productId: '2' },
+    })
 
     emitSpy.mockRestore()
   })

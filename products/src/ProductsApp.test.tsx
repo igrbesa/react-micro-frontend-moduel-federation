@@ -1,46 +1,56 @@
-import { act } from 'react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { bus } from '../../shared/bus'
 import { CART_PRODUCT_PREVIEW_EVENT } from '../../shared/cartEvents'
 import ProductsApp from './ProductsApp'
 
 describe('ProductsApp', () => {
-  it('opens cart preview panel on cart:product-preview with no productId', () => {
+  it('shows empty embedded preview Shell mode with no selected product id', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
-        <ProductsApp />
+        <ProductsApp embeddedInShellCart embeddedPreviewContext={null} />
       </MemoryRouter>,
     )
 
-    expect(screen.getByRole('heading', { name: 'Products' })).toBeInTheDocument()
-
-    act(() => {
-      bus.emit(CART_PRODUCT_PREVIEW_EVENT, {})
-    })
-
+    expect(screen.getByRole('heading', { name: 'Product preview' })).toBeInTheDocument()
     expect(screen.getByText(/Select an item in your cart/)).toBeInTheDocument()
   })
 
-  it('shows detail after cart:product-preview with productId', () => {
+  it('shows detail in embedded Shell mode when preview product id is set', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
-        <ProductsApp />
+        <ProductsApp embeddedInShellCart embeddedPreviewContext={{ productId: '1' }} />
       </MemoryRouter>,
     )
-
-    act(() => {
-      bus.emit(CART_PRODUCT_PREVIEW_EVENT, { productId: '1' })
-    })
 
     expect(screen.getByRole('heading', { name: 'Notebook' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Close preview' })).toBeInTheDocument()
   })
 
-  it('renders catalog when no cart preview event was received', () => {
+  it('emits openPreviewPane false when Close preview in embedded Shell mode', async () => {
+    const user = userEvent.setup()
+    const emitSpy = vi.spyOn(bus, 'emit')
+
     render(
-      <MemoryRouter initialEntries={['/products']}>
+      <MemoryRouter initialEntries={['/']}>
+        <ProductsApp embeddedInShellCart embeddedPreviewContext={{ productId: '1' }} />
+      </MemoryRouter>,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Close preview' }))
+
+    expect(emitSpy).toHaveBeenCalledWith(CART_PRODUCT_PREVIEW_EVENT, {
+      openPreviewPane: false,
+    })
+
+    emitSpy.mockRestore()
+  })
+
+  it('renders catalog when not embedded', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
         <ProductsApp />
       </MemoryRouter>,
     )
