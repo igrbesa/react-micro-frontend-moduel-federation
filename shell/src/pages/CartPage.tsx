@@ -6,6 +6,8 @@ import {
   type ComponentType,
   type LazyExoticComponent,
 } from 'react'
+import { FlexRowSplitHandle } from '../split/FlexRowSplitHandle'
+import { useFlexRowSplit } from '../split/useFlexRowSplit'
 import { bus } from '../../../shared/bus'
 import {
   CART_PRODUCT_PREVIEW_EVENT,
@@ -59,6 +61,11 @@ function applyCartPreview(
 
 export function CartPage() {
   const [preview, setPreview] = useState<CartPreviewShellState>({ phase: 'closed' })
+  const isSplitOpen = preview.phase === 'open'
+
+  const { splitRef, splitContainerStyle, splitHandleProps } = useFlexRowSplit({
+    splitActive: isSplitOpen,
+  })
 
   useEffect(() => {
     return bus.on(CART_PRODUCT_PREVIEW_EVENT, (p) => {
@@ -68,39 +75,58 @@ export function CartPage() {
 
   const splitClasses =
     'shell-cart-split' +
-    (preview.phase === 'open' ? ' shell-cart-split--double' : ' shell-cart-split--single')
+    (isSplitOpen ? ' shell-cart-split--double' : ' shell-cart-split--single')
 
   return (
-    <div className={splitClasses}>
+    <div
+      ref={splitRef}
+      data-testid="shell-cart-split"
+      className={splitClasses}
+      style={splitContainerStyle}
+    >
       <section className="shell-cart-split__pane shell-cart-split__pane--cart" aria-label="Shopping cart">
         <Suspense fallback={<RemoteFallback />}>
           <CartRemote />
         </Suspense>
       </section>
 
-      {preview.phase === 'open' && preview.openPayload.previewRemote === 'products' ? (
-        <section
-          className="shell-cart-split__pane shell-cart-split__pane--products"
-          aria-label="Product preview"
-        >
-          <Suspense fallback={<RemoteFallback />}>
-            <ProductsRemote
-              embeddedInShellCart
-              embeddedPreviewContext={preview.openPayload.previewContext}
-            />
-          </Suspense>
-        </section>
+      {isSplitOpen && preview.openPayload.previewRemote === 'products' ? (
+        <>
+          <FlexRowSplitHandle
+            data-testid="shell-cart-splitter"
+            className="shell-cart-split__splitter"
+            splitHandleProps={splitHandleProps}
+          />
+          <section
+            className="shell-cart-split__pane shell-cart-split__pane--products"
+            aria-label="Product preview"
+          >
+            <Suspense fallback={<RemoteFallback />}>
+              <ProductsRemote
+                embeddedInShellCart
+                embeddedPreviewContext={preview.openPayload.previewContext}
+              />
+            </Suspense>
+          </section>
+        </>
       ) : null}
 
-      {preview.phase === 'open' && preview.openPayload.previewRemote === 'thirdParty' ? (
-        <section
-          className="shell-cart-split__pane shell-cart-split__pane--thirdparty"
-          aria-label="Third-party preview panel"
-        >
-          <ThirdPartyCartPreviewPlaceholder
-            previewContext={preview.openPayload.previewContext}
+      {isSplitOpen && preview.openPayload.previewRemote === 'thirdParty' ? (
+        <>
+          <FlexRowSplitHandle
+            data-testid="shell-cart-splitter"
+            className="shell-cart-split__splitter"
+            splitHandleProps={splitHandleProps}
           />
-        </section>
+          <section
+            className="shell-cart-split__pane shell-cart-split__pane--thirdparty"
+            aria-label="Third-party preview panel"
+          >
+            <ThirdPartyCartPreviewPlaceholder
+              previewContext={preview.openPayload.previewContext}
+            />
+          </section>
+        </>
       ) : null}
     </div>
   )
