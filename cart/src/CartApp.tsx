@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import { bus } from '../../shared/bus'
-import { CART_ADD_EVENT } from '../../shared/cartEvents'
+import { CART_ADD_EVENT, CART_PRODUCT_PREVIEW_EVENT } from '../../shared/cartEvents'
 import { getStoredCartLines } from '../../shared/cartStorage'
 import { useAppDispatch, useAppSelector } from './hooks'
 import { addItemFromProducts, hydrateFromStorage } from './store/slices/cartSlice'
@@ -18,6 +18,7 @@ function CartContent() {
   const lines = useAppSelector(selectCartLines)
   const total = useAppSelector(selectCartTotal)
   const currency = useAppSelector(selectCartCurrency)
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null)
 
   useEffect(() => {
     dispatch(hydrateFromStorage(getStoredCartLines()))
@@ -36,15 +37,33 @@ function CartContent() {
         Remote micro-app: sample line items from Redux state.
       </p>
       <ul className="mfe-cart__list">
-        {lines.map((line) => (
-          <li key={line.id} className="mfe-cart__line">
-            <span className="mfe-cart__name">{line.name}</span>
-            <span className="mfe-cart__meta">
-              ×{line.qty} · {currency}{' '}
-              {line.lineTotal.toFixed(2)}
-            </span>
-          </li>
-        ))}
+        {lines.map((line) => {
+          const isSelected = selectedProductId === line.id
+          return (
+            <li key={line.id}>
+              <button
+                type="button"
+                className={
+                  'mfe-cart__line' +
+                  (isSelected ? ' mfe-cart__line--selected' : '')
+                }
+                aria-pressed={isSelected}
+                onClick={() => {
+                  setSelectedProductId(line.id)
+                  bus.emit(CART_PRODUCT_PREVIEW_EVENT, {
+                    productId: line.id,
+                  })
+                }}
+              >
+                <span className="mfe-cart__name">{line.name}</span>
+                <span className="mfe-cart__meta">
+                  ×{line.qty} · {currency}{' '}
+                  {line.lineTotal.toFixed(2)}
+                </span>
+              </button>
+            </li>
+          )
+        })}
       </ul>
       <div className="mfe-cart__total">
         <span>Estimated total</span>
