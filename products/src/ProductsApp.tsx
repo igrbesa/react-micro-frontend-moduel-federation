@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { bus } from '../../shared/bus'
-import { CART_ADD_EVENT, CART_PRODUCT_PREVIEW_EVENT } from '../../shared/cartEvents'
+import {
+  CART_ADD_EVENT,
+  CART_PRODUCT_PREVIEW_EVENT,
+  type ProductsCartPreviewContext,
+} from '../../shared/cartEvents'
 import { addItemToStoredCart } from '../../shared/cartStorage'
 import { useAppSelector } from './hooks'
 import { selectProducts } from './store/slices/productsSlice'
@@ -147,22 +150,25 @@ function ProductsCartPreview({
   )
 }
 
-function ProductsRouterShell() {
-  const [cartPreviewOpen, setCartPreviewOpen] = useState(false)
-  const [previewProductId, setPreviewProductId] = useState<string | null>(null)
+export type ProductsAppProps = {
+  /** When true, renders only embed preview UI; routing is delegated to Shell / full-page route mounts. */
+  embeddedInShellCart?: boolean
+  /** Products-remote preview props from Shell (see `ProductsCartPreviewContext` in shared). */
+  embeddedPreviewContext?: ProductsCartPreviewContext | null
+}
 
-  useEffect(() => {
-    return bus.on(CART_PRODUCT_PREVIEW_EVENT, (payload) => {
-      setCartPreviewOpen(true)
-      setPreviewProductId(payload.productId ?? null)
-    })
-  }, [])
-
-  if (cartPreviewOpen) {
+function ProductsRouterShell({
+  embeddedInShellCart,
+  embeddedPreviewContext,
+}: ProductsAppProps) {
+  if (embeddedInShellCart) {
+    const previewProductId = embeddedPreviewContext?.productId ?? null
     return (
       <ProductsCartPreview
         previewProductId={previewProductId}
-        onDismissDetail={() => setPreviewProductId(null)}
+        onDismissDetail={() => {
+          bus.emit(CART_PRODUCT_PREVIEW_EVENT, { openPreviewPane: false })
+        }}
       />
     )
   }
@@ -179,10 +185,16 @@ function ProductsContent() {
   )
 }
 
-export default function ProductsApp() {
+export default function ProductsApp({
+  embeddedInShellCart,
+  embeddedPreviewContext,
+}: ProductsAppProps = {}) {
   return (
     <Provider store={store}>
-      <ProductsRouterShell />
+      <ProductsRouterShell
+        embeddedInShellCart={embeddedInShellCart}
+        embeddedPreviewContext={embeddedPreviewContext}
+      />
     </Provider>
   )
 }

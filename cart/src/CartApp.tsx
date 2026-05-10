@@ -51,7 +51,9 @@ function CartContent() {
                 onClick={() => {
                   setSelectedProductId(line.id)
                   bus.emit(CART_PRODUCT_PREVIEW_EVENT, {
-                    productId: line.id,
+                    openPreviewPane: true,
+                    previewRemote: 'products',
+                    previewContext: { productId: line.id },
                   })
                 }}
               >
